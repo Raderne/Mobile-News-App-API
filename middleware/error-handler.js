@@ -7,7 +7,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
   }
   return res
     .status(StatusCodes.INTERNAL_SERVER_ERROR)
-    .send("Bir şeyler yanlış gitti daha sonra tekrar deneyin");
+    .send("Bir şeyler yanlış gitti daha sonra tekrar deneyin" + err);
 };
 
 module.exports = errorHandlerMiddleware;

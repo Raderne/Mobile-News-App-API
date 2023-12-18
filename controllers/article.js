@@ -4,12 +4,10 @@ const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 
 const getAllArticles = async (req, res) => {
-  const articles = await Article.find().sort({ date: -1 });
-  if (!articles) {
-    res.status(StatusCodes.NOT_FOUND).json({ msg: "Articles not found" });
-  }
-
-  res.status(StatusCodes.OK).json({ articles });
+  const userID = req.user.id;
+  // find all articles that have the same userID as the user that is logged in (req.user.id)
+  const articles = await Article.find({ userID: userID });
+  res.status(StatusCodes.OK).json(articles);
 };
 
 const getArticle = async (req, res) => {
@@ -18,13 +16,12 @@ const getArticle = async (req, res) => {
     res.status(StatusCodes.NOT_FOUND).json({ msg: "Article not found" });
   }
 
-  res.status(StatusCodes.OK).json({ article });
+  res.status(StatusCodes.OK).json(article);
 };
 
 const createArticle = async (req, res) => {
   try {
-    const { title, description, content, url, img, category } =
-      req.body;
+    const { title, description, content, url, img, category } = req.body;
     const article = await Article.create({
       author: req.user.name + " " + req.user.lastName,
       title,
@@ -60,7 +57,7 @@ const updateArticle = async (req, res) => {
       { new: true, runValidators: true }
     );
 
-    res.status(StatusCodes.OK).json({ article });
+    res.status(StatusCodes.OK).json(article);
   } catch (error) {
     throw new BadRequestError("Invalid article data (could not update)");
   }
@@ -73,7 +70,7 @@ const deleteArticle = async (req, res) => {
       res.status(StatusCodes.NOT_FOUND).json({ msg: "Article not found" });
     }
 
-    res.status(StatusCodes.OK).json({ article });
+    res.status(StatusCodes.OK).json(article);
   } catch (error) {
     throw new BadRequestError("Invalid article data (could not delete)");
   }
