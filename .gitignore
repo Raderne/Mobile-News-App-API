@@ -1,2 +1,6 @@
 .env
 node_modules
+cert.crt
+cert.key
+cert.csr
+```
