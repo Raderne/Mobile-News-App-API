@@ -8,8 +8,10 @@ const app = express();
 
 // MongoDB connection
 const connectDB = require("./DB/connect");
+const authenticateUser = require("./middleware/authorization");
 // Routers
 const authRouter = require("./routes/auth");
+const articleRouter = require("./routes/article");
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
@@ -19,7 +21,7 @@ app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRouter);
-
+app.use("/api/articles", authenticateUser, articleRouter);
 // Error handler
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
